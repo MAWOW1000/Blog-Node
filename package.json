@@ -2,22 +2,28 @@
   "name": "blog",
   "version": "1.0.0",
   "main": "src/index.js",
-  
   "scripts": {
     "watch": "node-sass --watch src/resources/scss/ -o src/public/css/",
     "start": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
   "description": "",
+  "lint-staged": {
+    "src/**/*.{js,json,scss}": "prettier --write --single-quote --tab-width 4 --trailing-comma all"
+  },
   "dependencies": {
     "express": "^4.21.0",
     "express-handlebars": "^8.0.1"
   },
   "devDependencies": {
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "morgan": "^1.10.0",
     "node-sass": "^9.0.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   }
 }

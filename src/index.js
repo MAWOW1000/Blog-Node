@@ -1,28 +1,31 @@
-const path = require('path')
-const handlebars = require('express-handlebars')
-const express = require('express')
-const morgan = require('morgan')
-const app = express()
-const port = 3000
+const path = require('path');
+const handlebars = require('express-handlebars');
+const express = require('express');
+const morgan = require('morgan');
+const app = express();
+const port = 3000;
+const route = require('./routes');
 
+//config static path to run static file
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.engine('.hbs', handlebars.engine({
-  extname: '.hbs'
-}));
+//config run handlebars file and reduce handlebar => hbs
+app.engine(
+    '.hbs',
+    handlebars.engine({
+        extname: '.hbs',
+    }),
+);
 app.set('view engine', '.hbs');
 app.set('views', 'src/resources/views');
 
-app.use(morgan('combined'))
+//use morgan to view looger and state request
+app.use(morgan('combined'));
 
-app.get('/', (req, res) => {
-  res.render('home')
-})
+//config routes for web server
+route(app);
 
-app.get('/news', (req, res) => {
-  res.render('news')
-})
-
+//config listen port for web server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+    console.log(`Example app listening on port ${port}`);
+});
