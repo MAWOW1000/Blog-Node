@@ -1,0 +1,83 @@
+<div class="table__update" style="width: 1300px;">
+  <h1>Trash</h1>
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Desciption</th>
+        <th scope="col">Url</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each news}}
+        <tr>
+          <th scope="row">{{sum @index 1}}</th>
+          <td>{{this.title}}</td>
+          <td >{{this.description}}</td>
+          <td ><img src="{{this.img}}" style="width: 100px;"/></td>
+          <td> <a class="recover" data-id={{this._id}} href="">Recover</a> </td>
+          <td> <a data-bs-toggle="modal" data-bs-target="#exampleModal" data-id={{this._id}} href="">Delete Forever</a> </td>
+        </tr>
+        {{else}}
+        <tr>
+          <th colspan="5" class="text-center">Trash Empty</th>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <a href="/blog/table">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708z"/>
+    </svg>Blog List
+  </a>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Warning!!!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want delete this blog forever and can not recover?? 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button id="del" type="button" class="btn btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method="POST" id="uni"></form>
+<form method="POST" id="recoverForm"></form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script  type="text/javascript">
+  document.addEventListener("DOMContentLoaded", () => {
+    let id = '';
+    
+    $('#exampleModal').on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget) // Button that triggered the modal
+      id = button.data('id') // Extract info from data-* attributes
+    })
+
+    const formRecover = document.getElementById('recoverForm')
+    const recoverBut = $('.recover')
+
+    $(document).on('click', '.recover', function (e) {
+      e.preventDefault();
+      const iid = $(this).data('id');
+      formRecover.action = `/blog/recover/${iid}?_method=PATCH`
+      formRecover.submit()
+    })
+
+    const forrm = document.getElementById('uni')
+    document.getElementById('del').onclick = () => {
+      forrm.action = `/blog/trash/delete/${id}?_method=DELETE`
+      forrm.submit()
+    }
+  })
+</script>

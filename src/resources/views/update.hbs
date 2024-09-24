@@ -1,0 +1,18 @@
+<h1>Update Blog</h1>
+<form method="POST" action="/blog/conduct/{{news._id}}?_method=PUT">
+  <div class="col-auto">
+    <label for="inputPassword1">Title</label>
+    <input type="text" class="form-control" id="inputPassword1" value="{{news.title}}" placeholder="title" name="title">
+  </div>
+  <div class="col-auto">
+    <label for="inputPassword2">Desciption</label>
+    <input type="text" class="form-control" id="inputPassword2" value="{{news.description}}" placeholder="description" name="description">
+  </div>
+  <div class="col-auto"></div>
+    <label for="inputPassword3">Link image</label>
+    <input type="text" class="form-control" id="inputPasssword3" value="{{news.img}}" placeholder="url" name="img">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary" style="margin: 32px 0px 0px 120px">Update</button>
+  </div>
+</form>

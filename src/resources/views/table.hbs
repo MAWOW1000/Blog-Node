@@ -1,0 +1,125 @@
+<form method="POST" action="/blog/option" class="table__update" style="width: 1300px;">
+  <h1>Blog List</h1>
+  <div class="form-check" style="display: flex;">
+    <input class="form-check-input" type="checkbox" id="checkAll">
+    <label class="form-check-label" for="checkAll">
+      Select All
+    </label>
+
+    <select name="action" style="width: 200px; margin:0 32px;" class="form-select" aria-label="Default select example"
+      required>
+      <option value="">--Action--</option>
+      <option value="delete">Delete</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary disabled conduct">Conduct</button>
+  </div>
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Title
+          {{{sortFc 'title' _sort}}}
+        </th>
+        <th scope="col">Desciption
+          {{{sortFc 'description' _sort}}}
+        </th>
+        <th scope="col">Url
+          {{{sortFc 'img' _sort}}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each news}}
+      <tr>
+        <td><input class="form-check-input checkItem" type="checkbox" name="itemsList[]" value={{this._id}} /></td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.title}}</td>
+        <td>{{this.description}}</td>
+        <td><img src={{this.img}} style="width: 100px;" /></td>
+        <td> <a href="/blog/update/{{this._id}}">Update</a> </td>
+        <td> <a data-bs-toggle="modal" data-bs-target="#exampleModal" data-id={{this._id}} href="">Delete</a> </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <a href="/blog/trash">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+      viewBox="0 0 16 16">
+      <path
+        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+      <path
+        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+    </svg>Trash
+    <span>{{countDel}}</span>
+  </a>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Warning!!!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you want delete this blog??
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button id="del" type="button" class="btn btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method="POST" id="uni"></form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let id = '';
+
+    $('#exampleModal').on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget) // Button that triggered the modal
+      id = button.data('id') // Extract info from data-* attributes
+    })
+
+    const forrm = document.getElementById('uni')
+    document.getElementById('del').onclick = () => {
+      forrm.action = `/blog/delete/${id}?_method=DELETE`
+      forrm.submit()
+    }
+
+    const formOption = $('.table__update')
+    const buttonConduct = $('.conduct')
+    const selectItem = $('.checkItem')
+    const selectAll = $('#checkAll')
+
+    formOption.on('submit', (e) => {
+      if ($(this).hasClass('disabled')) {
+        e.preventDefault()
+      }
+    })
+
+    selectAll.change(function () {
+      selectItem.prop('checked', $(this).prop('checked'))
+      enableButton()
+    })
+
+    selectItem.change(function () {
+      selectAll.prop('checked', (selectItem.length === $('.checkItem:checked').length))
+      enableButton()
+    })
+
+    function enableButton() {
+      if ($('.checkItem:checked').length > 0) {
+        buttonConduct.removeClass('disabled')
+      }
+      else {
+        buttonConduct.addClass('disabled')
+      }
+    }
+
+  })
+</script>
